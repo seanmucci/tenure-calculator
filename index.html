@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Trump Tenure Calculator</title>
+  <title>Trump Tenure Converter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: system-ui, sans-serif;
-      max-width: 480px;
+      max-width: 520px;
       margin: 2rem auto;
       padding: 0 1rem;
-      line-height: 1.4;
+      line-height: 1.45;
     }
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       margin-bottom: 1rem;
       text-align: center;
     }
@@ -24,17 +24,17 @@
     input, select {
       width: 100%;
       font-size: 1rem;
-      padding: .4rem;
+      padding: .45rem;
       margin-top: .4rem;
     }
     #out {
-      margin-top: 1.5rem;
+      margin-top: 1.6rem;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       text-align: center;
     }
     footer {
-      margin-top: 2rem;
+      margin-top: 2.2rem;
       font-size: 0.8rem;
       text-align: center;
       color: #555;
@@ -42,27 +42,36 @@
   </style>
 </head>
 <body>
-  <h1>Trump Tenure Calculator</h1>
+  <h1>Trump Tenure Converter</h1>
 
+  <!-- INPUT NUMBER -->
   <label>
     Enter number:
-    <input id="valueInput" type="number" min="0" value="10" />
+    <input id="valueInput" type="number" min="0" value="1" />
   </label>
 
+  <!-- INPUT UNIT -->
   <label>
-    Choose unit:
-    <select id="unit"></select>
+    From unit:
+    <select id="inputUnit"></select>
   </label>
 
+  <!-- OUTPUT UNIT -->
+  <label>
+    To unit:
+    <select id="outputUnit"></select>
+  </label>
+
+  <!-- RESULT -->
   <p id="out"></p>
 
   <footer>
-    Source data: Wikipedia. 
+    Source data: Wikipedia. Created by Adam with ❤️ & JavaScript
   </footer>
 
   <script>
-    // Units: name and length in days
-    const officials = [
+    // Units with their length in days
+    const units = [
       { name: "Day", days: 1 },
       { name: "Scaramucci", days: 10 },
       { name: "Spicer", days: 182 },
@@ -71,32 +80,45 @@
       { name: "Mattis", days: 712 }
     ];
 
-    const unitSel = document.getElementById('unit');
+    // Elements
     const valueInput = document.getElementById('valueInput');
+    const inputSel  = document.getElementById('inputUnit');
+    const outputSel = document.getElementById('outputUnit');
 
-    // Populate dropdown
-    officials.forEach(o => unitSel.add(new Option(o.name, o.days)));
+    // Populate both dropdowns
+    units.forEach(u => {
+      inputSel.add(new Option(u.name, u.days));
+      outputSel.add(new Option(u.name, u.days));
+    });
 
-    const pluralize = (unitName, count) => {
-      if (count === 1) return unitName;
-      if (unitName === 'Day') return 'Days';
-      return unitName + 's';
+    // Simple pluralizer
+    const pluralize = (name, count) => {
+      if (count === 1) return name;
+      if (name === 'Day') return 'Days';
+      return name + 's';
     };
 
     function calc() {
-      const amount = Number(valueInput.value);
-      const denom = Number(unitSel.value);
-      const unitName = unitSel.selectedOptions[0].text;
-      const result = (amount / denom).toFixed(2);
-      document.getElementById('out').textContent = `${result} ${pluralize(unitName, result)}`;
+      const amount     = Number(valueInput.value);
+      const inDays     = Number(inputSel.value);
+      const outDays    = Number(outputSel.value);
+      if (!amount || inDays === 0 || outDays === 0) {
+        document.getElementById('out').textContent = '';
+        return;
+      }
+      const converted  = amount * inDays / outDays;
+      const outName    = outputSel.selectedOptions[0].text;
+      const resultStr  = `${converted.toFixed(2)} ${pluralize(outName, converted)}`;
+      document.getElementById('out').textContent = resultStr;
     }
 
+    // Event listeners
     valueInput.addEventListener('input', calc);
-    unitSel.addEventListener('change', calc);
+    inputSel.addEventListener('change', calc);
+    outputSel.addEventListener('change', calc);
 
-    // initial render
+    // Initial calculation
     calc();
   </script>
 </body>
 </html>
-
