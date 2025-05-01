@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Trump Tenure Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 480px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, select {
+      width: 100%;
+      font-size: 1rem;
+      padding: .4rem;
+      margin-top: .4rem;
+    }
+    #out {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      text-align: center;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Trump Tenure Calculator</h1>
+
+  <label>
+    Enter days:
+    <input id="days" type="number" min="1" value="10" />
+  </label>
+
+  <label>
+    Choose unit:
+    <select id="unit"></select>
+  </label>
+
+  <p id="out"></p>
+
+  <footer>
+    Source data: Wikipedia. Created by Adam with ❤️ & JS
+  </footer>
+
+  <script>
+    // Add officials here: name and tenure length in days
+    const officials = [
+      { name: "Anthony Scaramucci – White House Communications Director", days: 10 },
+      { name: "Sean Spicer – Press Secretary", days: 182 },
+      { name: "Rex Tillerson – Secretary of State", days: 406 },
+      { name: "John F. Kelly – White House Chief of Staff", days: 529 },
+      { name: "James Mattis – Secretary of Defense", days: 712 }
+    ];
+
+    // Populate dropdown
+    const unitSel = document.getElementById('unit');
+    officials.forEach(o => {
+      unitSel.add(new Option(o.name, o.days));
+    });
+
+    // Calculator logic
+    function calc() {
+      const d = Number(document.getElementById('days').value);
+      const denom = Number(unitSel.value);
+      const unitName = unitSel.selectedOptions[0].text.split("–")[0].trim();
+      const result = (d / denom).toFixed(2);
+      document.getElementById('out').textContent = `${result} ${unitName}${result == 1 ? '' : 's'}`;
+    }
+
+    document.getElementById('days').addEventListener('input', calc);
+    unitSel.addEventListener('change', calc);
+
+    // initial output
+    calc();
+  </script>
+</body>
+</html>
