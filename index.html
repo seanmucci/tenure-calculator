@@ -45,8 +45,8 @@
   <h1>Trump Tenure Calculator</h1>
 
   <label>
-    Enter days:
-    <input id="days" type="number" min="1" value="10" />
+    Enter number:
+    <input id="valueInput" type="number" min="0" value="10" />
   </label>
 
   <label>
@@ -57,39 +57,46 @@
   <p id="out"></p>
 
   <footer>
-    Source data: Wikipedia. Created by Adam with ❤️ & JS
+    Source data: Wikipedia. 
   </footer>
 
   <script>
-    // Add officials here: name and tenure length in days
+    // Units: name and length in days
     const officials = [
-      { name: "Anthony Scaramucci – White House Communications Director", days: 10 },
-      { name: "Sean Spicer – Press Secretary", days: 182 },
-      { name: "Rex Tillerson – Secretary of State", days: 406 },
-      { name: "John F. Kelly – White House Chief of Staff", days: 529 },
-      { name: "James Mattis – Secretary of Defense", days: 712 }
+      { name: "Day", days: 1 },
+      { name: "Scaramucci", days: 10 },
+      { name: "Spicer", days: 182 },
+      { name: "Tillerson", days: 406 },
+      { name: "Kelly", days: 529 },
+      { name: "Mattis", days: 712 }
     ];
 
-    // Populate dropdown
     const unitSel = document.getElementById('unit');
-    officials.forEach(o => {
-      unitSel.add(new Option(o.name, o.days));
-    });
+    const valueInput = document.getElementById('valueInput');
 
-    // Calculator logic
+    // Populate dropdown
+    officials.forEach(o => unitSel.add(new Option(o.name, o.days)));
+
+    const pluralize = (unitName, count) => {
+      if (count === 1) return unitName;
+      if (unitName === 'Day') return 'Days';
+      return unitName + 's';
+    };
+
     function calc() {
-      const d = Number(document.getElementById('days').value);
+      const amount = Number(valueInput.value);
       const denom = Number(unitSel.value);
-      const unitName = unitSel.selectedOptions[0].text.split("–")[0].trim();
-      const result = (d / denom).toFixed(2);
-      document.getElementById('out').textContent = `${result} ${unitName}${result == 1 ? '' : 's'}`;
+      const unitName = unitSel.selectedOptions[0].text;
+      const result = (amount / denom).toFixed(2);
+      document.getElementById('out').textContent = `${result} ${pluralize(unitName, result)}`;
     }
 
-    document.getElementById('days').addEventListener('input', calc);
+    valueInput.addEventListener('input', calc);
     unitSel.addEventListener('change', calc);
 
-    // initial output
+    // initial render
     calc();
   </script>
 </body>
 </html>
+
