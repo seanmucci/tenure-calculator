@@ -52,13 +52,13 @@
 
   <!-- INPUT UNIT -->
   <label>
-    From:
+    From unit:
     <select id="inputUnit"></select>
   </label>
 
   <!-- OUTPUT UNIT -->
   <label>
-    To:
+    To unit:
     <select id="outputUnit"></select>
   </label>
 
@@ -66,27 +66,27 @@
   <p id="out"></p>
 
   <footer>
-    Source data: Wikipedia. 
+    Source data: Wikipedia. Created by Adam with ❤️ & JavaScript
   </footer>
 
   <script>
-    // Units with their length in days
+    // Units with their length in days (unsorted list)
     const units = [
-      { name: "Day", days: 1 },
-      { name: "Scaramucci", days: 10 },
-      { name: "Spicer", days: 182 },
-      { name: "Tillerson", days: 406 },
-      { name: "Kelly", days: 529 },
-      { name: "Waltz", days: 102 },
-      { name: "Flynn",     days: 24  },
-      { name: "Priebus",   days: 189 },
-      { name: "Price",     days: 231 },
-      { name: "Mulvaney",  days: 454 },
-      { name: "Sessions",  days: 636 },
-      { name: "Barr",      days: 679 },
-      { name: "DeVos",     days: 1431 },
-      { name: "Mnuchin",   days: 1437 },
-      { name: "Mattis", days: 712 }
+      { name: "Day",        days: 1    },
+      { name: "Scaramucci", days: 10   },
+      { name: "Spicer",     days: 182  },
+      { name: "Tillerson",  days: 406  },
+      { name: "Kelly",      days: 529  },
+      { name: "Waltz",      days: 102  },
+      { name: "Flynn",      days: 24   },
+      { name: "Priebus",    days: 189  },
+      { name: "Price",      days: 231  },
+      { name: "Mulvaney",   days: 454  },
+      { name: "Sessions",   days: 636  },
+      { name: "Barr",       days: 679  },
+      { name: "DeVos",      days: 1431 },
+      { name: "Mnuchin",    days: 1437 },
+      { name: "Mattis",     days: 712  }
     ];
 
     // Elements
@@ -94,11 +94,18 @@
     const inputSel  = document.getElementById('inputUnit');
     const outputSel = document.getElementById('outputUnit');
 
-    // Populate both dropdowns
-    units.forEach(u => {
+    // Populate dropdowns alphabetically
+    const sortedUnits = units.slice().sort((a, b) => a.name.localeCompare(b.name));
+    sortedUnits.forEach(u => {
       inputSel.add(new Option(u.name, u.days));
       outputSel.add(new Option(u.name, u.days));
     });
+
+    // Default selections (1 Waltz → Scaramucci)
+    const defaultFrom = units.find(u => u.name === 'Waltz');
+    const defaultTo   = units.find(u => u.name === 'Scaramucci');
+    if (defaultFrom) inputSel.value = defaultFrom.days;
+    if (defaultTo)   outputSel.value = defaultTo.days;
 
     // Simple pluralizer
     const pluralize = (name, count) => {
